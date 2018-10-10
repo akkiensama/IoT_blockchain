@@ -1,0 +1,74 @@
+<% include partials/header %>
+
+<div class="container-fluid">
+    <div class="jumbotron">
+        <div class="container">
+            <h2 class="header">Xin chào, đây là thông tin thu thập từ vườn xoài của bạn.</h2>
+        </div>
+    </div>
+    
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div id="table1">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Nhiệt độ</th>
+                                <th>Độ ẩm</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tdata"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-lg-1">
+                <!-- <form method="post" action="/reset">
+                    <input class="btn btn-success" type="submit" value="Reset Data" />
+                </form> -->
+            </div>
+            <div class="col-lg-7">
+                <button class="btn btn-success" id="change-chart">Change to Material</button><br /><br />
+                <div id="chart-div"></div>
+            </div>
+        </div>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-lg-4">
+                <div id="table2">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Hoạt động </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tact"></tbody>
+                    </table>
+                </div>
+                <br />
+                <br />
+                <br />
+            </div>
+            <div class="col-lg-1">
+                
+            </div>
+            <div class="col-lg-7">
+                <button class="btn btn-primary" id="btn-up-activities">Upload the last 50 activities to IPFS</button><br /><br />
+                <!-- <button class="btn btn-primary" id="btn-blockchain">Upload data to Blockchain</button> -->
+                <div>
+                    <a id="activities-result-ipfs" target="_blank"></a>
+                    <a id="activities-result-ether" target="_blank"></a>
+                </div>
+                <button class="btn btn-primary" id="btn-up-sensors">Upload the last 50 sensor data to IPFS</button><br /><br />
+                <div id="up-sensors-result"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<% include partials/footer %>

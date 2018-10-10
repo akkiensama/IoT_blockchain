@@ -1,0 +1,18 @@
+*link app sau khi gửi lên heroku
+https://iot-agriculture.herokuapp.com/
+
+
+----------------------------------------------------
+*command để kết nối và lấy dữ liệu từ cơ sở dữ liệu về
+
+ket noi:
+    mongo ds129394.mlab.com:29394/kiendata -u "trung kien" -p "hockhongchoi97"
+
+export excel:
+    mongoexport -h ds129394.mlab.com:29394 -d kiendata -c dht11 -u "akkien" -p "hockhongchoi97" -o "C:/Users/Trung Kien/Documents/Nodejs/Project/BTLtruyenSoLieu/export_fromDB/dht11.csv" --csv -f "time,temp,humid"
+
+export JSON:
+    mongoexport -h ds129394.mlab.com:29394 -d kiendata -c dht11 -u "akkien" -p "hockhongchoi97" -o "C:/Users/Trung Kien/Documents/Nodejs/Project/BTLtruyenSoLieu/export_fromDB/dht11.json"
+
+export binary:
+    mongodump -h ds129394.mlab.com:29394 -d kiendata -c dht11 -u "akkien" -p "hockhongchoi97" -o "C:/Users/Trung Kien/Documents/Nodejs/Project/BTLtruyenSoLieu/export_fromDB"

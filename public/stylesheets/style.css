@@ -1,0 +1,55 @@
+body {
+  padding-top: 70px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+#table1{
+  height: 412px;
+  overflow-y: auto;
+}
+
+#table2{
+  height: 412px;
+  overflow-y: auto;
+}
+
+th{
+  background: lightgreen;
+}
+
+tr:nth-child(even){
+  background: lightgreen;
+}
+
+.jumbotron{
+  margin-top: -60px;
+  background: #576574;
+  height: 100px;
+}
+
+h2.header{
+  margin-bottom: 30px;
+  color: white;
+}
+
+span{
+  display: inline-block;
+  width: 300px;
+}
+
+footer{
+  color: white;
+  background-color: #222f3e;
+  height: 40px;
+  text-align: center;
+  padding-top: 8px;
+  margin-top: 0px;
+  overflow: auto;
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+}
