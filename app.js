@@ -216,7 +216,7 @@ app.get('/activity', function(req, res, next) {
 app.get('/api/activity', function(req, res, next) {
   Activity.find({ time: {$gte: req.query.from, $lte: req.query.to} }).select('-_id -__v')
     .then((result) => {
-      res.json(JSON.stringify(result));
+      res.json(result);
     })
     .catch((err) => console.log('api: fail to find activities data'))
 })
@@ -224,7 +224,7 @@ app.get('/api/activity', function(req, res, next) {
 app.get('/api/sensor', function(req, res, next) {
   Sensor.find({ time: {$gte: req.query.from, $lte: req.query.to} }).select('-_id -__v')
     .then((result) => {
-      res.json(JSON.stringify(result));
+      res.json(result);
     })
     .catch((err) => console.log('api: fail to find sensors data'))
 })
