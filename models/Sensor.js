@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var sensorSchema = new Schema({
-    time: String,
+    time: Date,
     temperature: Number,
     humidity: Number
 });

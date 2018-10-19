@@ -19,8 +19,8 @@ var Container = require('./ethereum/container');
 * Set up mongoose and Collection
 */
 var mongoose = require('mongoose');
-var Sensor = require('./models/sensors');
-var Activity = require('./models/activities');
+var Sensor = require('./models/Sensor');
+var Activity = require('./models/Activity');
 
 mongoose.connect('mongodb://kien:kien1234@ds129394.mlab.com:29394/kiendata',  { useNewUrlParser: true })
   .then(() => console.log('MongoDB connected ...'))
@@ -30,6 +30,9 @@ mongoose.connect('mongodb://kien:kien1234@ds129394.mlab.com:29394/kiendata',  { 
 var usersRouter = require('./routes/users');
 var aboutRouter =  require('./routes/about');
 var contactRouter = require('./routes/contact');
+
+var activitiesAPI = require('./routes/api/activitiesAPI');
+var sensorsAPI = require('./routes/api/sensorsAPI');
 
 var app = express();
 
@@ -58,34 +61,83 @@ app.get('/', function(req, res, next){
   res.render('index',{title: 'Home'});
 });
 
-app.post('/reset', function(req, res, next){
-  dataArr = [];
-  io.sockets.emit('serverSendData', dataArr);
-  res.location('/');
-  res.redirect('/');
-});
 
-app.post('/postActivity', function(req, res, next){
-  var data = {
-    time: parseInt(req.query.time),
-    temp: parseInt(req.query.temp),
-    humid: parseInt(req.query.humid)
+// API FOR POST NEW DATA
+app.post('/api/activity', function(req, res, next) {
+  
+  var activity = '';
+
+  if (req.body.activity){
+    switch(req.body.activity){
+      case '11':
+        activity = 'Bón phân hữu cơ';
+        break;
+      case '12':
+        activity = 'Bón phân NPK';
+        break;
+      case '13': 
+        activity = 'Bón phân HAI';
+        break;
+      case '14':
+        activity = 'Bón phân khác';
+        break;
+      case '2':
+        activity = 'Tưới nước';
+        break;
+      case '31':
+        activity = 'Xịt thuốc Antracol';
+        break;
+      case '32':
+        activity = 'Xịt thuốc Karate';
+        break;
+      case '33':
+        activity = 'Xịt thuốc Cyrux';
+        break;
+      case '34':
+        activity = 'Xịt thuốc khác';
+        break;
+      case '4':
+        activity = 'Tỉa cành';
+        break;
+      case '5':
+        activity = 'Bao trái';
+        break;
+      case '6':
+        activity = 'Thu hoạch';
+        break;
+      default: 
+        break;
+    }
+
+    var newActivity = new Activity({
+      time: new Date(),
+      activity: activity
+    });
+
+    newActivity.save(function (err, newActivity) {
+      if (err) {
+        return console.error(err);
+      } else {
+        console.log('Activity Submitted To Server', newActivity);
+        res.send('Data upload successfully'+newActivity);
+      }
+    });
+
+  } else {
+    console.log('Some activity is missed!');
   }
-  console.log(data);
   
 });
 
-app.get('/sensor', function(req, res, next) {
+app.post('/api/sensor', function(req, res, next) {
 
-  var date = new Date();
-
-  if (req.query.temp && req.query.humid && !isNaN(parseInt(req.query.temp)) && !isNaN(parseInt(req.query.humid))){
+  if (req.body.temp && req.body.humid && !isNaN(parseInt(req.body.temp)) && !isNaN(parseInt(req.body.humid))){
 
     ///insert to database
     var newSensorData = new Sensor({
-      time: date.toLocaleString(), 
-      temperature: parseInt(req.query.temp), 
-      humidity: parseInt(req.query.humid)
+      time: new Date(), 
+      temperature: parseInt(req.body.temp), 
+      humidity: parseInt(req.body.humid)
     });
 
     newSensorData.save(function (err, newSensorData) {
@@ -93,6 +145,7 @@ app.get('/sensor', function(req, res, next) {
         return console.error(err);
       } else{
         console.log('Activity Submitted To Server', newSensorData);
+        res.send('Data upload successfully' + newSensorData);
       }
     });
 
@@ -142,74 +195,6 @@ app.get('/sensor', function(req, res, next) {
     console.log('Some data is missed!');
   }
       
-  res.render('index'); 
-});
-
-app.get('/activity', function(req, res, next) {
-  
-  var date = new Date();
-  var activity = '';
-
-  if (req.query.activity){
-    switch(req.query.activity){
-      case '11':
-        activity = 'Bón phân hữu cơ';
-        break;
-      case '12':
-        activity = 'Bón phân NPK';
-        break;
-      case '13':
-        activity = 'Bón phân HAI';
-        break;
-      case '14':
-        activity = 'Bón phân khác';
-        break;
-      case '2':
-        activity = 'Tưới nước';
-        break;
-      case '31':
-        activity = 'Xịt thuốc Antracol';
-        break;
-      case '32':
-        activity = 'Xịt thuốc Karate';
-        break;
-      case '33':
-        activity = 'Xịt thuốc Cyrux';
-        break;
-      case '34':
-        activity = 'Xịt thuốc khác';
-        break;
-      case '4':
-        activity = 'Tỉa cành';
-        break;
-      case '5':
-        activity = 'Bao trái';
-        break;
-      case '6':
-        activity = 'Thu hoạch';
-        break;
-      default:
-        break;
-    }
-
-    var newActivity = new Activity({
-      time: date.toLocaleString(),
-      activity: activity
-    });
-
-    newActivity.save(function (err, newActivity) {
-      if (err){
-        return console.error(err);
-      } else{
-        console.log('Activity Submitted To Server', newActivity);
-      }
-    });
-
-  }else{
-    console.log('Some activity is missed!');
-  }
-  
-  res.render('index');
 });
 
 // API FOR REQUESTING DATA
@@ -240,13 +225,13 @@ io.sockets.on('connection', function(socket){
     })
     .catch((err) => console.log('Fail to find activities data'))
 
-  //send sensors data to all client
   Sensor.find({}).sort({time: -1}).limit(50).select('-_id -__v')
     .then((res) => {
       io.sockets.emit('server send sensors data', res.reverse());
     }) 
     .catch((err) => console.log('Fail to find sensors data'))
 
+  
   socket.on('upload activities', function () {
     console.log('client request upload activites')
     Activity.find({}).sort({time: -1}).limit(50).select('-_id -__v')
@@ -272,6 +257,7 @@ io.sockets.on('connection', function(socket){
 app.use('/users', usersRouter);
 app.use('/about', aboutRouter);
 app.use('/contact', contactRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
