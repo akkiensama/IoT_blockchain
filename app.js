@@ -167,9 +167,10 @@ app.post('/api/sensor', function(req, res, next) {
         console.log('Activity Submitted To Server', newSensorData);
         res.send('Data upload successfully' + newSensorData);
       }
-    });
-
-
+    }); 
+        
+  }
+});
 // API FOR REQUESTING DATA
 app.get('/api/activity', function(req, res, next) {
   Activity.find({ time: {$gte: req.query.from, $lte: req.query.to} }).sort({time: -1}).select('-_id -__v')
