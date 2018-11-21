@@ -61,6 +61,26 @@ app.get('/', function(req, res, next){
   res.render('index',{title: 'Home'});
 });
 
+// for(let k = 0; k < 300; k++){
+//   let te = Math.floor(Math.random()*8) + 27;
+//   let hu = Math.floor(Math.random()*12) + 75;
+//   let milis = Math.floor(Math.random()*120) + 1;
+//   let ti = new Date(1542675540000 + milis*1000 + 30*60000*k);
+//   var newSensorData = new Sensor({
+//     time: ti, 
+//     temperature: te, 
+//     humidity: hu
+//   });
+
+//   newSensorData.save(function (err, newSensorData) {
+//     if (err){
+//       return console.error(err);
+//     } else{
+//       console.log('Activity Submitted To Server', newSensorData);
+//     }
+//   });
+// }
+
 
 // API FOR POST NEW DATA
 app.post('/api/activity', function(req, res, next) {
@@ -149,57 +169,10 @@ app.post('/api/sensor', function(req, res, next) {
       }
     });
 
-    ///Send Email Warning
-
-    // var transporter = nodemailer.createTransport({
-    //   service: 'Gmail',
-    //   auth: {
-    //     user: '...',
-    //     pass: '...'
-    //   }
-    // });
-    // var mailOptions = {
-    //   from: '<...>',
-    //   to: '1511640@hcmut.edu.vn',
-    //   subject: 'Warning about temperature ',
-    //   text: '',
-    //   html: ''
-    // };
-
-    // if(data.temp > 40){
-    //   mailOptions.text = 'Temperature was too high: ' + data.temp;
-    //   mailOptions.html = '<p>Temperature was too high: ' + data.temp + ' &#8451;</p>';
-
-    //   transporter.sendMail(mailOptions, function(error, info){
-    //     if(error){
-    //       console.log(error);
-    //     }else{
-    //       console.log('Mail message send: '+ info.response);
-    //     }
-    //   });
-    // }
-    // if(data.temp < 20){
-    //   mailOptions.text = 'Temperature was too low: ' + data.temp;
-    //   mailOptions.html = '<p>Temperature was too low: ' + data.temp + ' &#8451;</p>';
-
-    //   transporter.sendMail(mailOptions, function(error, info){
-    //     if(error){
-    //       console.log(error);
-    //     }else{
-    //       console.log('Mail message send: '+ info.response);
-    //     }
-    //   });
-    // }
-
-  }else{
-    console.log('Some data is missed!');
-  }
-      
-});
 
 // API FOR REQUESTING DATA
 app.get('/api/activity', function(req, res, next) {
-  Activity.find({ time: {$gte: req.query.from, $lte: req.query.to} }).select('-_id -__v')
+  Activity.find({ time: {$gte: req.query.from, $lte: req.query.to} }).sort({time: -1}).select('-_id -__v')
     .then((result) => {
       res.json(result);
     })
@@ -207,7 +180,7 @@ app.get('/api/activity', function(req, res, next) {
 })
 
 app.get('/api/sensor', function(req, res, next) {
-  Sensor.find({ time: {$gte: req.query.from, $lte: req.query.to} }).select('-_id -__v')
+  Sensor.find({ time: {$gte: req.query.from, $lte: req.query.to} }).sort({time: -1}).select('-_id -__v')
     .then((result) => {
       res.json(result);
     })
